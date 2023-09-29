@@ -1,3 +1,7 @@
+// フロントからのリクエストを受け取り、MySQLに繋げるためのサーバー
+// 全ユーザーの取得
+// ユーザーのDBへの登録 + 全ユーザーの取得
+
 package main
 
 import (
@@ -16,6 +20,8 @@ import (
 	"time"
 
 	_ "github.com/rs/cors"
+
+	// "net/url"
 )
 
 type UserResForHTTPGet struct {
@@ -34,6 +40,16 @@ func init() {
 	mysqlPwd := os.Getenv("MYSQL_PASS")
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
+
+	// mysqlUser := "uttc"
+	// mysqlPwd := "rad32first"
+	// mysqlHost := "34.42.70.51"
+	// mysqlPort := "3306" // ポート番号はMySQLのデフォルトポート（3306）に設定します
+	// mysqlDatabase := "unix(/cloudsql/term4-riku-kobayashi:us-central1:uttc)"
+	// mysqlDatabase = url.QueryEscape(mysqlDatabase)
+
+	// connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlPort, mysqlDatabase)
+	// _db, err := sql.Open("mysql", connStr)
 
 	// ①-2
 	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
