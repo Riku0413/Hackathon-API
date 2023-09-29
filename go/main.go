@@ -20,8 +20,6 @@ import (
 	"time"
 
 	_ "github.com/rs/cors"
-
-	// "net/url"
 )
 
 type UserResForHTTPGet struct {
@@ -41,16 +39,6 @@ func init() {
 	mysqlHost := os.Getenv("MYSQL_HOST")
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
-	// mysqlUser := "uttc"
-	// mysqlPwd := "rad32first"
-	// mysqlHost := "34.42.70.51"
-	// mysqlPort := "3306" // ポート番号はMySQLのデフォルトポート（3306）に設定します
-	// mysqlDatabase := "unix(/cloudsql/term4-riku-kobayashi:us-central1:uttc)"
-	// mysqlDatabase = url.QueryEscape(mysqlDatabase)
-
-	// connStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlPort, mysqlDatabase)
-	// _db, err := sql.Open("mysql", connStr)
-
 	// ①-2
 	connStr := fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase)
 	_db, err := sql.Open("mysql", connStr)
@@ -66,7 +54,6 @@ func init() {
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	// アクセス権を追加
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
@@ -192,7 +179,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 // 全データの取得処理
 func handler_2(w http.ResponseWriter, r *http.Request) {
 	// アクセス権を追加
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*") // ここのスペルミス！！！
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
