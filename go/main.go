@@ -67,6 +67,7 @@ func init() {
 func handler(w http.ResponseWriter, r *http.Request) {
 	// アクセス権を追加
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
@@ -192,6 +193,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func handler_2(w http.ResponseWriter, r *http.Request) {
 	// アクセス権を追加
 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*") // ここのスペルミス！！！
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
 
