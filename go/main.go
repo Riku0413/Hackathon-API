@@ -71,7 +71,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// ②-2
-		rows, err := db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+		rows, err := db.Query("SELECT id, name, age FROM user_ver_0 WHERE name = ?", name)
 		if err != nil {
 			log.Printf("fail: db.Query, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -144,7 +144,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// MySQLの操作
-		_, err = db.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", ulidString, newUser.Name, newUser.Age)
+		_, err = db.Exec("INSERT INTO user_ver_0 (id, name, age) VALUES (?, ?, ?)", ulidString, newUser.Name, newUser.Age)
 		if err != nil {
 			log.Printf("fail: db.Exec, %v\n", err)
 			w.Write([]byte("error number : 2")) // エラーメッセージをクライアントに返す（デバッグ用）
@@ -191,7 +191,7 @@ func handler_2(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodGet:
 		log.Printf("get")
-		rows, err := db.Query("SELECT id, name, age FROM user")
+		rows, err := db.Query("SELECT id, name, age FROM user_ver_0")
 		if err != nil {
 			log.Printf("fail: db.Query, %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
@@ -258,7 +258,7 @@ func handler_2(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// MySQLの操作
-		_, err = db.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", ulidString, newUser.Name, newUser.Age)
+		_, err = db.Exec("INSERT INTO user_ver_0 (id, name, age) VALUES (?, ?, ?)", ulidString, newUser.Name, newUser.Age)
 		if err != nil {
 			log.Printf("fail: db.Exec, %v\n", err)
 			w.Write([]byte("error number : 2")) // エラーメッセージをクライアントに返す（デバッグ用）
