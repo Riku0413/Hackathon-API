@@ -4,13 +4,20 @@ FROM golang:1.21.0 as build
 # コンテナ内の作業ディレクトリを設定
 WORKDIR /app
 
+# Go モジュールの依存関係をコピー
+COPY go.mod .
+COPY go.sum .
+
+# Go モジュールをインストール
+RUN go mod download
+
 # ソースコードをコンテナ内にコピー
 COPY . .
 
-# Goアプリケーションのビルド
+# Go アプリケーションのビルド
 RUN go build -o main .
 
-# ポート8000を公開
+# ポート 8000 を公開
 EXPOSE 8000
 
 # アプリケーションを起動
