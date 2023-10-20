@@ -5,9 +5,7 @@ FROM golang:1.21.0 as build
 WORKDIR /app
 
 # ソースコードをコンテナ内にコピー
-COPY main.go .
-COPY go.mod .
-COPY go.sum .
+COPY . .
 
 # Goアプリケーションのビルド
 RUN go build -o main .
