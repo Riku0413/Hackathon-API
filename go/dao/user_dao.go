@@ -8,7 +8,7 @@ import (
 // nameの値をもとにDBからデータを取得して、スライスの形でusecaseに返す
 func GetUsersByName(name string) ([]model.User, error) {
 	// ここではトランザクションが不要！
-	rows, err := Db.Query("SELECT id, name, age FROM user WHERE name = ?", name)
+	rows, err := Db.Query("SELECT id, name, age FROM user_ver_0 WHERE name = ?", name)
 	if err != nil {
 		log.Printf("fail: Db.Query, %v\n", err)
 		return nil, err
@@ -40,7 +40,7 @@ func RegisterUser(user model.User) error {
 	}
 
 	// MySQLの操作
-	_, err = tx.Exec("INSERT INTO user (id, name, age) VALUES (?, ?, ?)", user.Id, user.Name, user.Age)
+	_, err = tx.Exec("INSERT INTO user_ver_0 (id, name, age) VALUES (?, ?, ?)", user.Id, user.Name, user.Age)
 	if err != nil {
 		// エラーが発生した場合、トランザクションをロールバックし、エラーを上位に返す
 		tx.Rollback()
@@ -59,7 +59,7 @@ func RegisterUser(user model.User) error {
 }
 
 func GetAllUsers() ([]model.User, error) {
-	rows, err := Db.Query("SELECT id, name, age FROM user")
+	rows, err := Db.Query("SELECT id, name, age FROM user_ver_0")
 	if err != nil {
 		log.Printf("fail: Db.Query, %v\n", err)
 		return nil, err
