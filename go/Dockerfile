@@ -11,7 +11,7 @@ COPY . .
 RUN go build -o main .
 
 # ポート8000を公開
-EXPOSE 8000
+EXPOSE 8080
 
 # アプリケーションを起動
 CMD ["./main"]
