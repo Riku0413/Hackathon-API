@@ -7,12 +7,12 @@ import (
 	"log"
 )
 
-func GetAllUsers() ([]model.User, error) {
+func VideoGet(videoId string) (model.Video, error) {
 	// ここでは何もせずに、daoにバトンを渡す → 返ってきたデータをcontrollerに返す
-	users, err := dao.GetAllUsers()
+	video, err := dao.VideoGet(videoId)
 	if err != nil {
-		log.Printf("fail: dao.GetAllUsers(), %v\n", err)
-		return nil, err
+		log.Printf("fail: dao.VideoGet(), %v\n", err)
+		return model.Video{}, err
 	}
-	return users, nil
+	return video, nil
 }

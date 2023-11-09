@@ -7,11 +7,11 @@ import (
 	"log"
 )
 
-func RegisterUser(user model.User) error {
+func VideoPost(video model.Video) error {
 	// ここでは何もせずに、daoにバトンを渡す → 返ってきたデータをcontrollerに返す
 	// 本当は、ここのreturn文は1行にまとめられるけど、可読性向上のために2行に分けておく
-	if err := dao.RegisterUser(user); err != nil {
-		log.Printf("fail: dao.RegisterUser, %v\n", err)
+	if err := dao.VideoPost(video); err != nil {
+		log.Printf("fail: dao.VideoPost, %v\n", err)
 		return err
 	}
 	return nil

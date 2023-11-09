@@ -12,12 +12,12 @@ import (
 )
 
 // 新しいユーザーデータのポスト
-func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
+func RegisterRobotHandler(w http.ResponseWriter, r *http.Request) {
 	// ここいるのかな
-	w.Header().Set("Access-Control-Allow-Origin", "*") // ここの条件は審議！
+	w.Header().Set("Access-Control-Allow-Origin", "*")  // ここの条件は審議！
 	w.Header().Set("Access-Control-Allow-Headers", "*") // ここのスペルミス！！！
 	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	
+
 	switch r.Method {
 	// case http.MethodOptions:
 	// 	log.Printf("options 2") // これいる？　いるなら統一しよう
@@ -26,8 +26,8 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		// ポストするJSON形式データをデコードしてGoの形式に変換
 		decoder := json.NewDecoder(r.Body)
-		var newUser model.User
-		if err := decoder.Decode(&newUser); err != nil {
+		var newRobot model.Robot
+		if err := decoder.Decode(&newRobot); err != nil {
 			log.Printf("fail: json decode, %v\n", err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
@@ -35,12 +35,12 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close() // ここはエラーにならないの？？？
 
 		// name, age の条件を満たしているかチェック（バリデーション）
-		if err := model.User.CheckName(newUser); err != nil {
-			log.Printf("fail: model.User.CheckName, %v\n", err)
+		if err := model.Robot.CheckName(newRobot); err != nil {
+			log.Printf("fail: model.Robot.CheckName, %v\n", err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
-		} else if err := model.User.CheckAge(newUser); err != nil {
-			log.Printf("fail: model.User.CheckAge, %v\n", err)
+		} else if err := model.Robot.CheckAge(newRobot); err != nil {
+			log.Printf("fail: model.Robot.CheckAge, %v\n", err)
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
@@ -55,21 +55,21 @@ func RegisterUserHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		ulidString := ulidValue.String() // ULIDを文字列に変換　// ここでエラーになることは？
-		newUser.Id = ulidString
+		newRobot.Id = ulidString
 
 		// ここまでで、ポストするデータの妥当性チェックと、そのデータの、Goの型での準備が完了！
 
 		// usecaseにバトンタッチし、error or not だけを結果として受け取る！
-		if err := usecase.RegisterUser(newUser); err != nil {
-			log.Printf("fail: usecase.RegisterUser, %v\n", err) // エラー表示はこの書き方で統一する
-			w.WriteHeader(http.StatusInternalServerError)       // ここら辺これでいいのかな
+		if err := usecase.RegisterRobot(newRobot); err != nil {
+			log.Printf("fail: usecase.RegisterRobot, %v\n", err) // エラー表示はこの書き方で統一する
+			w.WriteHeader(http.StatusInternalServerError)        // ここら辺これでいいのかな
 			return
 		}
 
 		// クライアントへのレスポンスを作成し、JSON形式に変換
 		// JSON形式はcontrollerでしか登場させない！
 		response := map[string]interface{}{
-			"id": newUser.Id, // ここのエラーはないの？
+			"id": newRobot.Id, // ここのエラーはないの？
 		}
 		jsonResponse, err := json.Marshal(response)
 		if err != nil {
