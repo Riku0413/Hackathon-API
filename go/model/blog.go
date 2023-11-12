@@ -10,6 +10,7 @@ type Blog struct {
 	BirthTime  string `json:"birth_time"`
 	UpdateTime string `json:"update_time"`
 	Public     bool   `json:"publish"`
+	Likes      int    `json:"likes"`
 }
 
 // Nameのバリデーションメソッド

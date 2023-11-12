@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func BlogsSearchHandler(w http.ResponseWriter, r *http.Request) {
+func VideosSearchHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
@@ -17,32 +17,31 @@ func BlogsSearchHandler(w http.ResponseWriter, r *http.Request) {
 		queryParams := r.URL.Query()
 		keyword := queryParams.Get("q")
 		if keyword == "" {
-			log.Printf("fail: controller.BlogsSearchHandler(), keyword query is null")
+			log.Printf("fail: controller.VideosSearchHandler(), keyword query is null")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
-		blogs, err := usecase.BlogsSearch(keyword)
+		videos, err := usecase.VideosSearch(keyword)
 		if err != nil {
-			log.Printf("fail: usecase.BlogsSearch(), %v\n", err)
-			log.Printf("fail: controller.BlogsSearchHandler(), %v\n", err)
+			log.Printf("fail: usecase.VideosSearch(), %v\n", err)
+			log.Printf("fail: controller.VideosSearchHandler(), %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		jsonResponses, err := json.Marshal(blogs)
+		jsonResponses, err := json.Marshal(videos)
 		if err != nil {
 			log.Printf("fail: json.Marshal(), %v\n", err)
-			log.Printf("fail: controller.BlogsSearchHandler(), %v\n", err)
+			log.Printf("fail: controller.VideosSearchHandler(), %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(jsonResponses)
-		log.Printf("get: controller.BlogsSearchHandler()")
 
 	default:
-		log.Printf("fail: controller.BlogsSearchHandler(), HTTP Method is %s\n", r.Method)
+		log.Printf("fail: controller.VideosSearchHandler(), HTTP Method is %s\n", r.Method)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}

@@ -103,7 +103,7 @@ func BlogGet(id string) (model.Blog, error) {
 	// MySQL特有の型は、dao以外では登場させたくない → この処理はdaoで済ませる
 	var b model.Blog
 	if rows.Next() {
-		if err := rows.Scan(&b.Id, &b.Title, &b.Content, &b.UserId, &b.BirthTime, &b.UpdateTime, &b.Public); err != nil {
+		if err := rows.Scan(&b.Id, &b.Title, &b.Content, &b.UserId, &b.BirthTime, &b.UpdateTime, &b.Public, &b.Likes); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.Blog{}, err
 		}
@@ -146,6 +146,22 @@ func BlogDelete(id string) error {
 		return err
 	}
 
+	// 関連するいいねを削除
+	_, err = tx.Exec("DELETE FROM likes_blog WHERE blog_id = ?", id)
+	if err != nil {
+		tx.Rollback()
+		log.Printf("fail: tx.Exec, %v\n", err)
+		return err
+	}
+
+	// 関連するコメントを削除
+	_, err = tx.Exec("DELETE FROM comment_blog WHERE blog_id = ?", id)
+	if err != nil {
+		tx.Rollback()
+		log.Printf("fail: tx.Exec, %v\n", err)
+		return err
+	}
+
 	// トランザクションを終了
 	if err := tx.Commit(); err != nil {
 		log.Printf("fail: tx.Commit, %v\n", err)
@@ -157,7 +173,7 @@ func BlogDelete(id string) error {
 
 // user_idに紐づくブログを最終更新日時の降順で取得
 func BlogsGet(userId string) ([]model.Blog, error) {
-	rows, err := Db.Query("SELECT id, title, update_time FROM blog WHERE user_id = ? ORDER BY update_time DESC", userId)
+	rows, err := Db.Query("SELECT id, title, update_time, likes FROM blog WHERE user_id = ? ORDER BY update_time DESC", userId)
 	if err != nil {
 		log.Printf("fail: Db.Query, %v\n", err)
 		return nil, err
@@ -168,7 +184,7 @@ func BlogsGet(userId string) ([]model.Blog, error) {
 	for rows.Next() {
 		var b model.Blog
 		// ブログID、タイトル、最終更新日時、の3つだけを返す！
-		if err := rows.Scan(&b.Id, &b.Title, &b.UpdateTime); err != nil {
+		if err := rows.Scan(&b.Id, &b.Title, &b.UpdateTime, &b.Likes); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
 				log.Printf("fail: rows.Close(), %v\n", err)
@@ -181,9 +197,9 @@ func BlogsGet(userId string) ([]model.Blog, error) {
 	return blogs, nil
 }
 
-// user_idに紐づくブログを最終更新日時の降順で取得
+// 検索キーからブログを最終更新日時の降順で取得
 func BlogsSearch(key string) ([]model.Blog, error) {
-	query := "SELECT id, title, content, update_time FROM blog WHERE (title LIKE ? OR content LIKE ?) AND public = 1 ORDER BY update_time DESC"
+	query := "SELECT id, title, birth_time, update_time, likes FROM blog WHERE (title LIKE ? OR content LIKE ?) AND public = 1 ORDER BY update_time DESC"
 	keyword := "%" + key + "%" // キーワードを含む部分文字列を作成
 	rows, err := Db.Query(query, keyword, keyword)
 	if err != nil {
@@ -196,7 +212,7 @@ func BlogsSearch(key string) ([]model.Blog, error) {
 	for rows.Next() {
 		var b model.Blog
 		// ブログID、タイトル、最終更新日時、の3つだけを返す！
-		if err := rows.Scan(&b.Id, &b.Title, &b.Content, &b.UpdateTime); err != nil {
+		if err := rows.Scan(&b.Id, &b.Title, &b.BirthTime, &b.UpdateTime, &b.Likes); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
 				log.Printf("fail: rows.Close(), %v\n", err)
@@ -204,6 +220,30 @@ func BlogsSearch(key string) ([]model.Blog, error) {
 			return nil, err
 		}
 		blogs = append(blogs, b) // users にデータを順々に格納！
+	}
+
+	return blogs, nil
+}
+
+// 全てのブログを取得
+func BlogsGetAll() ([]model.Blog, error) {
+	rows, err := Db.Query("SELECT id, title, birth_time, update_time, likes FROM blog WHERE public = 1")
+	if err != nil {
+		log.Printf("fail: Db.Query, %v\n", err)
+		return nil, err
+	}
+
+	blogs := make([]model.Blog, 0)
+	for rows.Next() {
+		var b model.Blog
+		if err := rows.Scan(&b.Id, &b.Title, &b.BirthTime, &b.UpdateTime, &b.Likes); err != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+			if err := rows.Close(); err != nil {
+				log.Printf("fail: rows.Close(), %v\n", err)
+			}
+			return nil, err
+		}
+		blogs = append(blogs, b)
 	}
 
 	return blogs, nil

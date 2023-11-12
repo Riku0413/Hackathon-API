@@ -116,30 +116,6 @@ func BookGet(id string) (model.Book, error) {
 	return b, nil
 }
 
-//func GetAllRobots() ([]model.Robot, error) {
-//	rows, err := Db.Query("SELECT id, name, age FROM robot")
-//	if err != nil {
-//		log.Printf("fail: Db.Query, %v\n", err)
-//		return nil, err
-//	}
-//
-//	// rowsはここで、しっかり処理して、Go特有の型に変換してからusecaseに戻す
-//	robots := make([]model.Robot, 0)
-//	for rows.Next() {
-//		var r model.Robot
-//		if err := rows.Scan(&r.Id, &r.Name, &r.Age); err != nil {
-//			log.Printf("fail: rows.Scan, %v\n", err)
-//			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
-//				log.Printf("fail: rows.Close(), %v\n", err)
-//			}
-//			return nil, err
-//		}
-//		robots = append(robots, r) // users にデータを順々に格納！
-//	}
-//
-//	return robots, nil
-//}
-
 // idをもとにDBからブログを削除して、削除したブログのidをusecaseに返す
 func BookDelete(id string) error {
 
@@ -209,6 +185,58 @@ func BooksGet(userId string) ([]model.Book, error) {
 			return nil, err
 		}
 		books = append(books, b) // users にデータを順々に格納！
+	}
+
+	return books, nil
+}
+
+// 検索キーから本を最終更新日時の降順で取得
+func BooksSearch(key string) ([]model.Book, error) {
+	query := "SELECT id, title, birth_time, update_time FROM book WHERE (title LIKE ?) AND public = 1 ORDER BY update_time DESC"
+	keyword := "%" + key + "%" // キーワードを含む部分文字列を作成
+	rows, err := Db.Query(query, keyword)
+	if err != nil {
+		log.Printf("fail: Db.Query, %v\n", err)
+		return nil, err
+	}
+
+	// rowsはここで、しっかり処理して、Go特有の型に変換してからusecaseに戻す
+	books := make([]model.Book, 0)
+	for rows.Next() {
+		var b model.Book
+		// 本ID、タイトル、最終更新日時、の3つだけを返す！
+		if err := rows.Scan(&b.Id, &b.Title, &b.BirthTime, &b.UpdateTime); err != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
+				log.Printf("fail: rows.Close(), %v\n", err)
+			}
+			return nil, err
+		}
+		books = append(books, b) // users にデータを順々に格納！
+	}
+
+	return books, nil
+}
+
+// 全ての本を取得
+func BooksGetAll() ([]model.Book, error) {
+	rows, err := Db.Query("SELECT id, title, birth_time, update_time FROM book WHERE public = 1")
+	if err != nil {
+		log.Printf("fail: Db.Query, %v\n", err)
+		return nil, err
+	}
+
+	books := make([]model.Book, 0)
+	for rows.Next() {
+		var b model.Book
+		if err := rows.Scan(&b.Id, &b.Title, &b.BirthTime, &b.UpdateTime); err != nil {
+			log.Printf("fail: rows.Scan, %v\n", err)
+			if err := rows.Close(); err != nil { // 500を返して終了するが、その前にrowsのClose処理が必要
+				log.Printf("fail: rows.Close(), %v\n", err)
+			}
+			return nil, err
+		}
+		books = append(books, b)
 	}
 
 	return books, nil

@@ -11,15 +11,11 @@ import (
 // 新しいユーザーデータのポスト
 func UserSignUpHandler(w http.ResponseWriter, r *http.Request) {
 	// ここいるのかな
-	w.Header().Set("Access-Control-Allow-Origin", "*")  // ここの条件は審議！
-	w.Header().Set("Access-Control-Allow-Headers", "*") // ここのスペルミス！！！
-	w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Origin", "*") // ここの条件は審議！
+	w.Header().Set("Access-Control-Allow-Headers", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST")
 
 	switch r.Method {
-	// case http.MethodOptions:
-	// 	log.Printf("options 2") // これいる？　いるなら統一しよう
-	// 	w.WriteHeader(http.StatusOK)
-	// 	return
 	case http.MethodPost:
 		// ポストするJSON形式データをデコードしてGoの形式に変換
 		decoder := json.NewDecoder(r.Body)
