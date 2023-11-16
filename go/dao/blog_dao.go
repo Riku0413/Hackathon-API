@@ -17,7 +17,7 @@ func BlogPost(blog model.Blog) error {
 	}
 
 	// MySQLの操作
-	_, err = tx.Exec("INSERT INTO blog (id, title, content, user_id, birth_time, update_time, public) VALUES (?, ?, ?, ?, ?, ?, ?)", blog.Id, blog.Title, blog.Content, blog.UserId, blog.BirthTime, blog.UpdateTime, blog.Public)
+	_, err = tx.Exec("INSERT INTO blog (id, title, content, user_id, birth_time, update_time, public, likes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", blog.Id, blog.Title, blog.Content, blog.UserId, blog.BirthTime, blog.UpdateTime, blog.Public, 0)
 	if err != nil {
 		// エラーが発生した場合、トランザクションをロールバックし、エラーを上位に返す
 		tx.Rollback()
