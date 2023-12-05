@@ -4,11 +4,31 @@
 
 自作したナレッジベース（Webアプリ）のバックエンド
 
-## 実行方法
+## 実行方法（MySQLコンテナの作成）
 
 1. リポジトリのクローン
    ```
-   git pull "url"
+   git pull "https://github.com/Riku0413/Hackathon-API.git"
+   ```
+2. ディレクトリ移動
+   ```
+   cd ./mysql
+   ```
+3. アクセス権の追加
+   ```
+   chmod a+x ./init/*.sh
+   ```
+
+4. コンテナの起動
+   ```
+   docker-compose up -d
+   ```
+
+## 実行方法（Goサーバーの立ち上げ）
+
+1. リポジトリのクローン
+   ```
+   git pull "https://github.com/Riku0413/Hackathon-API.git"
    ```
 2. ディレクトリ移動
    ```
