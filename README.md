@@ -8,7 +8,7 @@
 
 1. リポジトリのクローン
    ```
-   git pull "https://github.com/Riku0413/Hackathon-API.git"
+   git clone "https://github.com/Riku0413/Hackathon-API.git"
    ```
 2. ディレクトリ移動
    ```
