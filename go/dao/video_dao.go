@@ -106,7 +106,7 @@ func VideoGet(id string) (model.Video, error) {
 	var v model.Video
 	var urlString string
 	if rows.Next() {
-		if err := rows.Scan(&v.Id, &v.UserId, &v.Title, &urlString, &v.BirthTime, &v.UpdateTime, &v.Public, &v.Introduction); err != nil {
+		if err := rows.Scan(&v.Id, &v.UserId, &v.Title, &v.Introduction, &urlString, &v.BirthTime, &v.UpdateTime, &v.Public); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.Video{}, err
 		}

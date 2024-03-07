@@ -23,7 +23,7 @@ func init() {
 	mysqlDatabase := os.Getenv("MYSQL_DATABASE")
 
 	// ①-2
-	_db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(localhost:3306)/%s", mysqlUser, mysqlUserPwd, mysqlDatabase))
+	_db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@(localhost:3307)/%s", mysqlUser, mysqlUserPwd, mysqlDatabase))
 	// ①-2
 	//_db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", mysqlUser, mysqlPwd, mysqlHost, mysqlDatabase))
 	if err != nil {

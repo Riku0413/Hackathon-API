@@ -103,7 +103,7 @@ func BlogGet(id string) (model.Blog, error) {
 	// MySQL特有の型は、dao以外では登場させたくない → この処理はdaoで済ませる
 	var b model.Blog
 	if rows.Next() {
-		if err := rows.Scan(&b.Id, &b.Title, &b.Content, &b.UserId, &b.BirthTime, &b.UpdateTime, &b.Public, &b.Likes); err != nil {
+		if err := rows.Scan(&b.Id, &b.UserId, &b.Title, &b.Content, &b.BirthTime, &b.UpdateTime, &b.Public, &b.Likes); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.Blog{}, err
 		}

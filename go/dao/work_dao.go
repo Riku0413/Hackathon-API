@@ -104,7 +104,7 @@ func WorkGet(id string) (model.Work, error) {
 	var w model.Work
 	//var urlString string
 	if rows.Next() {
-		if err := rows.Scan(&w.Id, &w.UserId, &w.Title, &w.URL, &w.BirthTime, &w.UpdateTime, &w.Public, &w.Introduction); err != nil {
+		if err := rows.Scan(&w.Id, &w.UserId, &w.Title, &w.Introduction, &w.URL, &w.BirthTime, &w.UpdateTime, &w.Public); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.Work{}, err
 		}

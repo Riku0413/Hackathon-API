@@ -116,7 +116,7 @@ func UserGet(id string) (model.User, error) {
 	// MySQL特有の型は、dao以外では登場させたくない → この処理はdaoで済ませる
 	var u model.User
 	if rows.Next() {
-		if err := rows.Scan(&u.Id, &u.RegisterTime, &u.LastTime, &u.UserName, &u.Introduction, &u.GitHub); err != nil {
+		if err := rows.Scan(&u.Id, &u.UserName, &u.Introduction, &u.GitHub, &u.RegisterTime, &u.LastTime); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.User{}, err
 		}

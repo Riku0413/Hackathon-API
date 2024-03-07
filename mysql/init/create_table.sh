@@ -2,6 +2,15 @@
 
 CMD_MYSQL="mysql -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE}"
 
+$CMD_MYSQL -e "create table user (
+        id char(28) NOT NULL primary key,
+        user_name varchar(127) DEFAULT '',
+        introduction varchar(1023) DEFAULT '',
+        git_hub varchar(255) DEFAULT '',
+        register_time timestamp,
+        last_online_time timestamp
+    );"
+
 $CMD_MYSQL -e "create table blog (
         id char(26) NOT NULL primary key,
         user_id char(28),
@@ -10,6 +19,7 @@ $CMD_MYSQL -e "create table blog (
         birth_time timestamp,
         update_time timestamp,
         public tinyint(1) DEFAULT 0,
+        likes int DEFAULT 0,
         FOREIGN KEY (user_id) REFERENCES user(id)
     );"
 
@@ -68,13 +78,4 @@ $CMD_MYSQL -e "create table comment_blog (
         user_name varchar(127) DEFAULT '',
         FOREIGN KEY (user_id) REFERENCES user(id),
         FOREIGN KEY (blog_id) REFERENCES blog(id)
-    );"
-
-$CMD_MYSQL -e "create table user (
-        id char(28) NOT NULL primary key,
-        user_name varchar(127) DEFAULT '',
-        introduction varchar(1023) DEFAULT '',
-        git_hub varchar(255) DEFAULT '',
-        register_time timestamp,
-        last_online_time timestamp
     );"

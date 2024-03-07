@@ -104,7 +104,7 @@ func BookGet(id string) (model.Book, error) {
 	var b model.Book
 	if rows.Next() {
 		// ここのコラムの順番はデータベースに合わせる必要がある！！！
-		if err := rows.Scan(&b.Id, &b.UserId, &b.Title, &b.BirthTime, &b.UpdateTime, &b.Public, &b.Introduction); err != nil {
+		if err := rows.Scan(&b.Id, &b.UserId, &b.Title, &b.Introduction, &b.BirthTime, &b.UpdateTime, &b.Public); err != nil {
 			log.Printf("fail: rows.Scan, %v\n", err)
 			return model.Book{}, err
 		}
